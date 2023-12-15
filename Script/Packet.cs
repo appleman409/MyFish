@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>Sent from server to client.</summary>
@@ -15,7 +16,8 @@ public enum ServerPackets
     levelup =6,
     gainexp =7,
     getshop=8,
-    getaquarium = 9
+    getaquarium = 9,
+    butfish=10
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -29,7 +31,8 @@ public enum ClientPackets
     levelupReceived =6,
     gainexpReceived =7,
     getshopReceived =8,
-    getaquariumReceived =9
+    getaquariumReceived =9,
+    buyfish = 10
 }
 
 public class Packet : IDisposable

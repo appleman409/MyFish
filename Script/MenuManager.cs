@@ -62,7 +62,6 @@ public class MenuManager : MonoBehaviour
                 break;
             case Menu.game:
                 WaitGame.SetActive(false);
-                loadingMenu.SetActive(false);
                 homeMenu.SetActive(false);
                 registerMenu.SetActive(false);
                 game.SetActive(true);
@@ -94,12 +93,37 @@ public class MenuManager : MonoBehaviour
 
     public void WaitBonus(float bonus)
     {
-        Image LoadingBar = WaitGame.GetComponent<Image>();
-        float temp = LoadingBar.fillAmount;
-        LoadingBar.fillAmount = (bonus + temp) / 100;
-        if ((bonus + temp) == 100)
+        Slider LoadingBar = WaitGame.transform.Find("Slider").GetComponent<Slider>();
+
+        float temp = LoadingBar.value;
+        if ((bonus + temp*100) >= 100)
+        {
+            _menu = Menu.game;
+            Starting();
+            Player.instance.changeSlotAqua(1);
+            loadingMenu.SetActive(false);
+
+        }
+        else if ((bonus + temp * 100) == 80)
         {
             _menu = Menu.game;
         }
+        LoadingBar.value = (bonus + temp*100) / 100;
+         
+    }
+
+    public void getFish()
+    {
+        Starting();
+        Player.instance.changeSlotAqua(1);
+        loadingMenu.SetActive(false);
+    }
+    
+    IEnumerator Starting()
+    {
+
+        // Chờ 10 giây
+        yield return new WaitForSeconds(10f);
+        
     }
 }

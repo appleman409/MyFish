@@ -21,22 +21,31 @@ public class Movement : MonoBehaviour
     }
     void Update()
     {
-        Move();
-        foreach (Transform child in transform.parent.transform)
+        GameObject info = GetComponent<Fish>().info;
+        if (!info.activeSelf)
         {
-            if (child != transform)
-            {
-                if (selectcheck(targetPoint, child.position))
+            Move();
+            foreach (Transform child in transform.parent.transform)
+            { 
+                if (child != transform)
                 {
-                    if (Vector3.Distance(child.position, transform.position) <= distance)
+                    if (selectcheck(targetPoint, child.position))
                     {
-                        Debug.Log(Vector3.Distance(child.position, transform.position));
-                        targetPoint = RandomPoint();
-                        Rotation();
+                        if (Vector3.Distance(child.position, transform.position) <= distance)
+                        {
+                            Debug.Log(Vector3.Distance(child.position, transform.position));
+                            targetPoint = RandomPoint();
+                            Rotation();
                         
+                        }
                     }
                 }
             }
+        }
+        else
+        {
+            Quaternion target = Quaternion.Euler(0, 0, 0);
+            transform.rotation = Quaternion.Slerp(transform.rotation, target,  Time.deltaTime * 5f);
         }
     }
     

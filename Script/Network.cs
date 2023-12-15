@@ -179,7 +179,8 @@ public class Network : MonoBehaviour
             { (int)ServerPackets.levelup, ClientHandle.LevelUp},
             { (int)ServerPackets.gainexp, ClientHandle.GainExp},
             { (int)ServerPackets.getshop, ClientHandle.GetShop},
-            { (int)ServerPackets.getaquarium, ClientHandle.GetAquarium}
+            { (int)ServerPackets.getaquarium, ClientHandle.GetAquarium},
+            { (int)ServerPackets.butfish, ClientHandle.BuyFish}
         };
         Debug.Log("Intall Packet..");
     }

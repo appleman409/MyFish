@@ -107,6 +107,23 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
     }
+
+    public static void BuyFish(int Uin, int FishID, string name, int g, int IDAqua, int cost, float exp, int gold)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.buyfish))
+        {
+            _packet.Write(Network.instance.myid);
+            _packet.Write(Uin);
+            _packet.Write(FishID);
+            _packet.Write(name);
+            _packet.Write(g);
+            _packet.Write(IDAqua);
+            _packet.Write(cost);
+            _packet.Write(exp);
+            _packet.Write(gold);
+            SendTCPData(_packet);
+        }
+    }
     
     #endregion
 }

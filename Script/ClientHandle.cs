@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -79,8 +78,7 @@ public class ClientHandle : MonoBehaviour
             MenuManager.instance._menu = MenuManager.Menu.Waitgame;
             ClientSend.GetShopReceived();
             Player.instance.SlotAqua = 1;
-            ClientSend.GetAquariumReceived(Uin);
-            Infomation.instance.GameStart();
+            
             
         }else if (result == 1)
         {
@@ -100,9 +98,9 @@ public class ClientHandle : MonoBehaviour
             Player.instance.Level = 1;
             Player.instance.MaxExp = 100;
             Player.instance.SlotAqua = 1;
-            Player.instance.Aquariums[0].CurFish = 0;
-            Player.instance.Aquariums[0].Slot = 1;
-            Player.instance.Aquariums[0].MaxFish = 4;
+            Player.instance.aquarium[0].CurFish = 0;
+            Player.instance.aquarium[0].Slot = 1;
+            Player.instance.aquarium[0].MaxFish = 4;
         }
         else
         {
@@ -127,7 +125,7 @@ public class ClientHandle : MonoBehaviour
     public static void GetShop(Packet _packet)
     {
         int ItemShopCount = _packet.ReadInt();
-        int fish = 0, trangtri = 0, taphoa = 0, sukien = 0, unknow =0;
+        int fish = 0, trangtri = 0, taphoa = 0, sukien = 0;
         for (int i = 0; i < ItemShopCount; i++)
         {
             int type = _packet.ReadInt();
@@ -166,27 +164,67 @@ public class ClientHandle : MonoBehaviour
         ShopManager.instance.GameStart();
         
         MenuManager.instance.WaitBonus(20);
+        ClientSend.GetAquariumReceived(Player.instance.Uin);
         
     }
 
     public static void GetAquarium(Packet _packet)
     {
         int numauqa = _packet.ReadInt();
-        for (int i = 0; i < numauqa; i++)
+        for (int i = 1; i <= numauqa; i++)
         {
-            Player.instance.Aquariums[i].ID = _packet.ReadInt();
-            Player.instance.Aquariums[i].Slot = _packet.ReadInt();
-            Player.instance.Aquariums[i].MaxFish = _packet.ReadInt();
-            Player.instance.Aquariums[i].CurFish = _packet.ReadInt();
-            for (int j = 0; j < Player.instance.Aquariums[i].CurFish; i++)
+            Player.instance.aquarium[i] = new Player.Aquarium();
+            Player.instance.aquarium[i].ID = _packet.ReadInt();
+            Player.instance.aquarium[i].Slot = _packet.ReadInt();
+            Player.instance.aquarium[i].MaxFish = _packet.ReadInt();
+            Player.instance.aquarium[i].CurFish = _packet.ReadInt();
+            for (int j = 0; j < Player.instance.aquarium[i].CurFish; j++)
             {
-                Player.instance.Aquariums[i].fishs[j].FishId = _packet.ReadInt();
-                Player.instance.Aquariums[i].fishs[j].Level = _packet.ReadInt();
-                Player.instance.Aquariums[i].fishs[j].Food = _packet.ReadFloat();
-                Player.instance.Aquariums[i].fishs[j].Grow = _packet.ReadFloat();
+                if (_packet.ReadInt() == Player.instance.aquarium[i].ID)
+                {
+                    Player.instance.aquarium[i].fishs[j] = new Player.Fish();
+                    Player.instance.aquarium[i].fishs[j].ID = _packet.ReadInt();
+                    Player.instance.aquarium[i].fishs[j].FishId = _packet.ReadInt();
+                    Player.instance.aquarium[i].fishs[j].Name = _packet.ReadString();
+                    Player.instance.aquarium[i].fishs[j].Level = _packet.ReadInt();
+                    Player.instance.aquarium[i].fishs[j].TimeFood = _packet.ReadFloat();
+                    Player.instance.aquarium[i].fishs[j].Grow = _packet.ReadFloat();
+                    Player.instance.aquarium[i].fishs[j].Gender = _packet.ReadInt();
+                    Player.instance.aquarium[i].fishs[j].getCoin = _packet.ReadInt();
+                    Player.instance.aquarium[i].fishs[j].getExp = _packet.ReadFloat();
+                    Debug.Log(Player.instance.aquarium[i].fishs[j].FishId + " " + i + " " + j);
+                    //Player.Fish fish = Player.instance.aquarium[i].fishs[j];
+                    //global::BuyFish.instance.spawnFish(fish.FishId, fish.Level, fish.TimeFood, fish.Grow, fish.Gender, fish.getCoin, fish.getExp, i);
+                }
             }
         }
         MenuManager.instance.WaitBonus(20);
+        Debug.Log("Aquairum");
+        Infomation.instance.GameStart();
+    }
+
+    public static void BuyFish(Packet _packet)
+    {
+        int result = _packet.ReadInt();
+        if (result == 1)
+        {
+            Player p = Player.instance;
+            int curfish = p.aquarium[p.SlotAqua].CurFish;
+            p.aquarium[p.SlotAqua].fishs[curfish] = new Player.Fish();
+            Player.Fish fish = p.aquarium[p.SlotAqua].fishs[curfish];
+            fish.ID = _packet.ReadInt();
+            fish.FishId = _packet.ReadInt();
+            fish.Name = _packet.ReadString();
+            fish.Gender = _packet.ReadInt();
+            fish.Level = _packet.ReadInt();
+            fish.Grow = _packet.ReadFloat();
+            fish.getCoin = _packet.ReadInt();
+            fish.getExp = _packet.ReadFloat(); 
+            
+            fish.TimeFood = 0;
+            p.aquarium[p.SlotAqua].fishs[curfish] = fish;
+            global::BuyFish.instance.spawnFish(fish.ID ,fish.FishId, fish.Name, fish.Level, fish.TimeFood, fish.Grow, fish.Gender, fish.getCoin, fish.getExp, p.SlotAqua);
+        }
     }
     
 }

@@ -38,7 +38,10 @@ public class Infomation : MonoBehaviour
         Level.text = Player.instance.Level.ToString();
         Username.text = Player.instance.Username;
         Gold.text = Player.instance.Gold.ToString();
+        Debug.Log("Load Avatar");
         StartCoroutine(LoadImage(AvatarLink));
+        Debug.Log("Load Done");
+        
         MenuManager.instance.WaitBonus(60);
     }
 

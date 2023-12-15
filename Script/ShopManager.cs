@@ -85,22 +85,22 @@ public class ShopManager : MonoBehaviour
                     {
                         case 1:
                             go = Instantiate(ItemObject, new Vector3 (0,0,0), Quaternion.identity) as GameObject;
-                            go.transform.parent = FishMenu.transform;
+                            go.transform.SetParent(FishMenu.transform);
                             go.transform.localScale = new Vector3(1, 1, 1);
                             break;
                         case 2:
                             go = Instantiate(ItemObject, new Vector3 (0,0,0), Quaternion.identity) as GameObject;
-                            go.transform.parent = trangtriMenu.transform;
+                            go.transform.SetParent(trangtriMenu.transform);
                             go.transform.localScale = new Vector3(1, 1, 1);
                             break;
                         case 3:
                             go = Instantiate(ItemObject, new Vector3 (0,0,0), Quaternion.identity) as GameObject;
-                            go.transform.parent = taphoaMenu.transform;
+                            go.transform.SetParent(taphoaMenu.transform);
                             go.transform.localScale = new Vector3(1, 1, 1);
                             break;
                         case 4:
                             go = Instantiate(ItemObject, new Vector3 (0,0,0), Quaternion.identity) as GameObject;
-                            go.transform.parent = sukienMenu.transform;
+                            go.transform.SetParent(sukienMenu.transform); 
                             go.transform.localScale = new Vector3(1, 1, 1);
                             break;
                     }
